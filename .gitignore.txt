@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Don't upload dataset
+data/
+
+# Don't upload virtual environments
+.venv/
+venv/
+C:\venv_pixelproj/
+
+# VS Code settings
+.vscode/
+
+# Model checkpoint
+checkpoints/
+
