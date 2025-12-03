@@ -18,16 +18,8 @@ import matplotlib.pyplot as plt
 from data_loader import get_dataloaders
 from models import MLPBaseline, CNNModel
 
+USE_CNN = True  
 
-# ---------------------------------------------------------------
-# CHOOSE MODEL HERE
-# ---------------------------------------------------------------
-USE_CNN = True  # True = CNNModel, False = MLPBaseline
-
-
-# ---------------------------------------------------------------
-# TRAINING LOOP
-# ---------------------------------------------------------------
 def train_model(model, train_loader, val_loader, device, epochs=10, lr=1e-3):
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -36,7 +28,6 @@ def train_model(model, train_loader, val_loader, device, epochs=10, lr=1e-3):
     train_losses, val_losses = [], []
 
     for epoch in range(1, epochs + 1):
-        # Training
         model.train()
         running_loss = 0.0
         for imgs, labels in train_loader:
@@ -53,7 +44,6 @@ def train_model(model, train_loader, val_loader, device, epochs=10, lr=1e-3):
         train_loss = running_loss / len(train_loader)
         train_losses.append(train_loss)
 
-        # Validation
         model.eval()
         val_loss = 0.0
         with torch.no_grad():
@@ -68,7 +58,6 @@ def train_model(model, train_loader, val_loader, device, epochs=10, lr=1e-3):
 
         print(f"Epoch [{epoch}/{epochs}]  Train Loss: {train_loss:.4f}  Val Loss: {val_loss:.4f}")
 
-        # Save best model
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             os.makedirs("checkpoints", exist_ok=True)
@@ -78,9 +67,6 @@ def train_model(model, train_loader, val_loader, device, epochs=10, lr=1e-3):
     return train_losses, val_losses
 
 
-# ---------------------------------------------------------------
-# VISUALIZE TRAINING CURVES
-# ---------------------------------------------------------------
 def plot_losses(train_losses, val_losses):
     plt.figure(figsize=(6, 4))
     plt.plot(train_losses, label="Train Loss")
@@ -92,10 +78,6 @@ def plot_losses(train_losses, val_losses):
     plt.grid()
     plt.show()
 
-
-# ---------------------------------------------------------------
-# VISUALIZE PREDICTIONS vs GROUND TRUTH
-# ---------------------------------------------------------------
 def visualize_predictions(model, loader, device, n=10):
     model.eval()
     imgs, labels = next(iter(loader))
@@ -123,10 +105,6 @@ def visualize_predictions(model, loader, device, n=10):
     plt.tight_layout()
     plt.show()
 
-
-# ---------------------------------------------------------------
-# MAIN
-# ---------------------------------------------------------------
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)

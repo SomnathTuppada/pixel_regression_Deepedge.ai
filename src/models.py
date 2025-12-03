@@ -10,10 +10,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-# ---------------------------------------------------
-# 1) MLP BASELINE MODEL
-# ---------------------------------------------------
 class MLPBaseline(nn.Module):
     def __init__(self):
         super().__init__()
@@ -22,20 +18,16 @@ class MLPBaseline(nn.Module):
         self.fc1 = nn.Linear(50 * 50, 512)
         self.fc2 = nn.Linear(512, 256)
         self.fc3 = nn.Linear(256, 128)
-        self.out = nn.Linear(128, 2)  # predicts (x, y) normalized
+        self.out = nn.Linear(128, 2)  
 
     def forward(self, x):
         x = self.flatten(x)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
-        x = torch.sigmoid(self.out(x))  # ensure outputs are in [0,1]
+        x = torch.sigmoid(self.out(x))  
         return x
 
-
-# ---------------------------------------------------
-# 2) CNN MODEL (BETTER)
-# ---------------------------------------------------
 class CNNModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -44,9 +36,8 @@ class CNNModel(nn.Module):
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, padding=1)
         self.conv3 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
 
-        self.pool = nn.MaxPool2d(2, 2)  # reduces H,W by half
+        self.pool = nn.MaxPool2d(2, 2)  
 
-        # After 3 conv + pool layers, size becomes 50 → 25 → 12 → 6
         self.fc1 = nn.Linear(64 * 6 * 6, 128)
         self.out = nn.Linear(128, 2)
 
@@ -60,15 +51,11 @@ class CNNModel(nn.Module):
         x = F.relu(self.conv3(x))
         x = self.pool(x)
 
-        x = x.view(x.size(0), -1)  # flatten
+        x = x.view(x.size(0), -1)
         x = F.relu(self.fc1(x))
         x = torch.sigmoid(self.out(x))
         return x
 
-
-# ---------------------------------------------------
-# TEST CODE
-# ---------------------------------------------------
 if __name__ == "__main__":
     print("Testing models...")
 

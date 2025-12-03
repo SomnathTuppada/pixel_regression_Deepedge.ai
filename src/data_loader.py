@@ -32,8 +32,8 @@ class PixelDataset(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx):
-        img = self.images[idx].astype(np.float32) / 255.0  # normalize grayscale
-        img = torch.tensor(img).unsqueeze(0)  # (1,50,50)
+        img = self.images[idx].astype(np.float32) / 255.0  
+        img = torch.tensor(img).unsqueeze(0)  
 
         label = torch.tensor(self.labels[idx], dtype=torch.float32)
         return img, label
@@ -64,14 +64,12 @@ def visualize_batch(images, labels, n=16):
     plt.figure(figsize=(6, 6))
     plt.imshow(np_img[:, :, 0], cmap="gray")
 
-    # Overlay true (x,y) positions
     for i in range(n):
         x = labels[i][0].item() * 49
         y = labels[i][1].item() * 49
 
         row = i // 4
         col = i % 4
-        # Each image is 50px wide in the grid
         grid_x = col * 50 + x
         grid_y = row * 50 + y
 
